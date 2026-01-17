@@ -38,12 +38,24 @@ class Expenses extends Table {
   TextColumn get sourceSmsId => text().nullable()(); // ID of the SMS if auto-generated
 }
 
-@DriftDatabase(tables: [Expenses, Merchants, Categories])
+// Budget table for monthly spending limits
+class Budgets extends Table {
+  IntColumn get id => integer().autoIncrement()();
+  RealColumn get amount => real()(); // Monthly budget limit
+  IntColumn get month => integer()(); // 1-12
+  IntColumn get year => integer()(); // e.g., 2026
+  DateTimeColumn get createdAt => dateTime().withDefault(currentDateAndTime)();
+
+  @override
+  List<Set<Column>> get uniqueKeys => [{month, year}];
+}
+
+@DriftDatabase(tables: [Expenses, Merchants, Categories, Budgets])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
   
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -57,7 +69,13 @@ class AppDatabase extends _$AppDatabase {
        await m.createAll();
        // Seed default categories
        await _seedCategories();
-    }
+    },
+    onUpgrade: (m, from, to) async {
+      if (from < 2) {
+        // Add Budgets table in v2
+        await m.createTable(budgets);
+      }
+    },
   );
 
   Future<void> _seedCategories() async {

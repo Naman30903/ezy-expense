@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../../data/repositories/expense_repository.dart';
 import '../../../core/theme/app_theme.dart';
 import '../../sms_reader/providers/sms_ledger_provider.dart';
+import '../../budget/presentation/widgets/budget_card.dart';
 
 /// Dashboard screen showing expense summary and recent transactions.
 class DashboardScreen extends ConsumerStatefulWidget {
@@ -94,6 +95,11 @@ class _DashboardScreenState extends ConsumerState<DashboardScreen> {
                 ),
               ),
             ),
+          ),
+
+          // Budget Card
+          const SliverToBoxAdapter(
+            child: BudgetCard(),
           ),
 
           // Recent Transactions Header
