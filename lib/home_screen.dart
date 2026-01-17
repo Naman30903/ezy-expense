@@ -111,10 +111,26 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _openManualEntry,
-        icon: const Icon(Icons.add),
-        label: const Text('Add'),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          FloatingActionButton.small(
+            heroTag: 'voice_btn',
+            onPressed: () {
+              setState(() => _currentIndex = 2);
+            },
+            child: const Icon(Icons.mic),
+          ),
+          const SizedBox(height: 16),
+          FloatingActionButton.extended(
+            heroTag: 'add_btn',
+            onPressed: _openManualEntry,
+            icon: const Icon(Icons.add),
+            label: const Text('Add'),
+          ),
+        ],
       ),
     );
   }
